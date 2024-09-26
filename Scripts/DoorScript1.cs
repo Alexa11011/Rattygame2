@@ -5,33 +5,31 @@ using UnityEngine;
 public class DoorScript1 : MonoBehaviour
 {
     //A list of all the displays that can hold sprites
-    public GameObject Display1;
-    public GameObject Display2;
-    public GameObject Display3;
-    public GameObject Display4;
+    public GameObject Display1, Display2, Display3, Display4, connectingDisplay;
 
     //worried that everytime i try to add a new display it will have to be added here//
-    public GameObject connectingDisplay;
 
     // Start is called before the first frame update
     private const int NUMBEROFBUTTONS = 4;
 
- 
     //current players inputs into the door code for the first puzzle
-    public int Input1 = 0;
-    public int Input2 = 0;
-    public int Input3 = 0;
-    public int Input4 = 0;
+    public int[] inputs = new int[4];
+    // public int Input1 = 0;
+    // public int Input2 = 0;
+    // public int Input3 = 0;
+    // public int Input4 = 0;
 
     //a reference to what is the next number they are up to putting in
     public int CurrentInput = 1;
 
     //what are the 4 buttons needed to be pressed
+
+    public int[] puzzlesCodes = new int[4]
+
     public int PuzzleCode1;
     public int PuzzleCode2;
     public int PuzzleCode3;
     public int PuzzleCode4;
-
 
     void Start()
     {

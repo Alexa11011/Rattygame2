@@ -8,12 +8,10 @@ public class BounceDisplay : MonoBehaviour
     float displaySpeedY = -0.0002f;
    
     //parent size
-    public float pWidth;
-    public float pHeight;
-    //hold kids size
-    float width;
-    float height;
+    public float pWidth, pHeight
 
+    //hold childerns size
+    float width, height;
     public SpriteRenderer monitorSprite;
 
     
