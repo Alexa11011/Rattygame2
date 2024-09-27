@@ -59,12 +59,7 @@ public class HeatTracker : MonoBehaviour
                 heat = heat - leverMod;
             }
         }
-
-
-
-
-
-
+        
         if (isActive)
         {
 

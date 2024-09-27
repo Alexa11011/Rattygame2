@@ -5,15 +5,11 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
     public GameObject heldBy;
-    public Transform holderLocation;
-    public Transform cameralocation;
+    public Transform holderLocation, cameralocation;
     protected bool isInteractable = true;
-    protected bool carryable;
-    protected bool needsToBeHeld;
+    protected bool carryable, needsToBeHeld;
     
     //store the variable of whether your picking up the item
-
-
     public virtual void HeldBy(GameObject gameobject,Transform holder,Transform camera)
     {
         heldBy = gameobject;
@@ -25,10 +21,10 @@ public class Interactable : MonoBehaviour
     {
         //return true if heldby has a value
         return heldBy != null;
-    }
+    }    
     public bool IsntCarryable()
     {
-        return carryable == false; 
+        return carryable == false;
     }
     public bool NeedsToBeHeld()
     {
@@ -50,10 +46,5 @@ public class Interactable : MonoBehaviour
     public virtual void Interact()
     {
 
-    }
-
-  
-
-
-  
+    }  
 }

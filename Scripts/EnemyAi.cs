@@ -11,36 +11,37 @@ public class EnemyAi : MonoBehaviour
 
     AudioSource SoundThatPlaysWhenEnemyHasLostYou;
 
+    
+    public GameObject Player; //refrence to play location
 
-    //Start of ray
-    public Vector3 EnemyHead;
-    //end of ray
-    public Vector3 PlayerHead;
-    //refrence to play location
-    public GameObject Player;
-    public NavMeshAgent Navigater;
-    //a number to count time with with
-    public float TimeTillAlerted;
-    public float TimeTillGiveUp;
-    public float FollowPlayerTime;
-    //Speeds while in each mode
-    public float SearchSpeed;
-    public float AlertSpeed;
-    public float HuntSpeed;
-    //location of where an alert is
-    public Vector3 AlertLocation;
-    //get the player object and number his layer
-    private int PlayerLayer;
-    public GameObject player;
-    //how far the enemy can kill your from
-    public float CatchRange;   
-    //hitbox to get near where player was
-    public GameObject AlertArea;
-    //distance beteen player and enemy
-    public float distance;
+    
+    public GameObject AlertArea; //hitbox to get near where player was
+
+    
+    public Vector3 EnemyHead, PlayerHead; //Start of ray, `end of ray
+
+    
+    public Vector3 AlertLocation; //location of where an alert is
+    
+    
+    public float TimeTillAlerted, TimeTillGiveUp, FollowPlayerTime; //a number to count time with with
+
+    
+    public float SearchSpeed, AlertSpeed, HuntSpeed; //Speeds while in each mode
+
+    
+    public float distance; //distance beteen player and enemy
+
+    
+    public float CatchRange; //how far the enemy can kill your from 
+
+    
+    private int PlayerLayer; //get the player object and number his layer
+
+    public NavMeshAgent Navigater; // Start is called before the first frame update
     
 
-    // Start is called before the first frame update
+    
     void Start()
     {
         //set mode to searching and setup random search location
@@ -53,7 +54,6 @@ public class EnemyAi : MonoBehaviour
 
         SoundThatPlaysWhenEnemyHasLostYou = GetComponent<AudioSource>();
        
-        
         //how long before enemy speeds up
 
         TimeTillAlerted = 5;
@@ -106,7 +106,6 @@ public class EnemyAi : MonoBehaviour
         //check if you can see player
        // Debug.DrawRay(EnemyHead, direction, Color.black);
 
-        
         RaycastHit hit;
         //can this object see the player
         if (Physics.Raycast(EnemyHead, direction,out hit,distance, PlayerLayer))
@@ -129,10 +128,6 @@ public class EnemyAi : MonoBehaviour
                 EnemyMode = Mode.Searching;               
                 UpdateMode();
             }
-
-           
-
-
         }   
         //if it can see you
         else

@@ -13,30 +13,40 @@ public class DoorScript1 : MonoBehaviour
     private const int NUMBEROFBUTTONS = 4;
 
     //current players inputs into the door code for the first puzzle
-    public int[] inputs = new int[4];
+    public int[] inputs = new int[4]; //list of four inputs
+
+    public int[] puzzlesCodes = new int[4] // array of four puzzle codes
+
     // public int Input1 = 0;
     // public int Input2 = 0;
     // public int Input3 = 0;
     // public int Input4 = 0;
+    
+
 
     //a reference to what is the next number they are up to putting in
     public int CurrentInput = 1;
 
     //what are the 4 buttons needed to be pressed
 
-    public int[] puzzlesCodes = new int[4]
+    
 
-    public int PuzzleCode1;
-    public int PuzzleCode2;
-    public int PuzzleCode3;
-    public int PuzzleCode4;
+    // public int PuzzleCode1;
+    // public int PuzzleCode2;
+    // public int PuzzleCode3;
+    // public int PuzzleCode4;
 
     void Start()
     {
-        PuzzleCode1 = Random.Range(1, NUMBEROFBUTTONS + 1);
-        PuzzleCode2 = Random.Range(1, NUMBEROFBUTTONS + 1);
-        PuzzleCode3 = Random.Range(1, NUMBEROFBUTTONS + 1);
-        PuzzleCode4 = Random.Range(1, NUMBEROFBUTTONS + 1);
+        for (int i = 0; i < 4, i++) // for loop to assign random number between 1,4 to every item in puzzle codes list
+        {
+            puzzlesCodes[i] = Random.Range(1, NUMBEROFBUTTONS + 1);
+        }
+
+        // PuzzleCode1 = Random.Range(1, NUMBEROFBUTTONS + 1);
+        // PuzzleCode2 = Random.Range(1, NUMBEROFBUTTONS + 1);
+        // PuzzleCode3 = Random.Range(1, NUMBEROFBUTTONS + 1);
+        // PuzzleCode4 = Random.Range(1, NUMBEROFBUTTONS + 1);
     }
 
     //takes a string called button name from message send
@@ -50,7 +60,7 @@ public class DoorScript1 : MonoBehaviour
         int.TryParse(ButtonName.Substring(1), out ButtonValue);
 
         print(ButtonValue);
-        if (ButtonName == null || ButtonName.Length == 1 || ButtonValue == 0)
+        if (ButtonName == null || ButtonName.Length == 1 || ButtonValue == 0) // bug catcher
         {
             //if theres no button name this will trigger
             if (ButtonName != null)
@@ -62,30 +72,43 @@ public class DoorScript1 : MonoBehaviour
             //return means do no code after it
             return;
         }
-        
 
-        switch (CurrentInput)
+        if (CurrentInput > 0 && CurrentInput <= NUMBEROFBUTTONS)
         {
-            //if on the first digit
-            case 1:
-                //make it the number passed from the button string
-                Input1 = ButtonValue;
-                break;
-            case 2:
-                Input2 = ButtonValue;                
-                break;
-            case 3:
-                Input3 = ButtonValue;                
-                break;
-            case 4:
-                Input4 = ButtonValue;
-                break;
-                            default:
-                EnterPuzzle();
-                CurrentInput = 0;
-                print("errorpuzzlecountlost");
-                break;
+            inputs[CurrentInput - 1] = ButtonValue;
         }
+        else
+        {
+            EnterPuzzle();
+            CurrentInput = 0;
+            print("errorpuzzlecountlost");
+            break;
+        }
+
+
+        // switch (CurrentInput) // this is a big if statement.
+        // {
+        //     //if on the first digit
+        //     case 1: //if conditions
+        //         //make it the number passed from the button string
+        //         Input1 = ButtonValue;
+        //         break;
+        //     case 2:
+        //         Input2 = ButtonValue;                
+        //         break;
+        //     case 3:
+        //         Input3 = ButtonValue;                
+        //         break;
+        //     case 4:
+        //         Input4 = ButtonValue;
+        //         break;
+        //     default:
+        //         EnterPuzzle();
+        //         CurrentInput = 0;
+        //         print("errorpuzzlecountlost");
+        //         break;
+        // }
+
         //if all the inputs are filled enter puzzle
         if(CurrentInput == NUMBEROFBUTTONS) 
         {
@@ -102,73 +125,92 @@ public class DoorScript1 : MonoBehaviour
     void EnterPuzzle()
     {
         //grab the list of objects from the dislay and colour them accordingly
-
-
-
-
-        //if the first input is the same as the correct answer
-        if (Input1 == PuzzleCode1)
+        private List<GameObject> displayObjectList = connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects;
+        
+        for (int i = 0; i < 4; i++)
         {
-            //grab the script off of the display then look for the displayable objects then colour it green if right
-            connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[0].GetComponent<SpriteRenderer>().color = Color.green;
+            if (inputs[i] == puzzlesCodes[i])
+            {
+                displayObjectList[i].getcomponent<SpriteRenderer>().color = Color.green;
 
-            //this bellow was using a refrence of the script but it came back null for the displayable objects
-            //connectingDisplay.displayableObjects[0].GetComponent<SpriteRenderer>().color = Color.green;
-
-            print("Good");
-        }
-
-        // if the first input is the same as any number
-        else if (Input1 == PuzzleCode2 || Input1 == PuzzleCode3 || Input1 == PuzzleCode4)
-        {
-            print("almost");
-            connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[0].GetComponent<SpriteRenderer>().color = Color.yellow;
-        }
-        else
-        { print("No Way");
-            connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[0].GetComponent<SpriteRenderer>().color = Color.red;
+                print("Good");
+            }
+            else if (puzzlesCodes.Contains(inputs[i]))
+            {
+                displayObjectList[i].getcomponent<SpriteRenderer>().color = Color.yellow;
+                print("almost")
+            }
+            else
+            {
+                displayObjectList[i].getcomponent<SpriteRenderer>().color = Color.red;
+                print("no way")
+            }
         }
 
 
-        if (Input2 == PuzzleCode2)
-        { print("Good"); 
-            connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[1].GetComponent<SpriteRenderer>().color = Color.green; 
-        }
+        // //if the first input is the same as the correct answer
+        // if (Input1 == PuzzleCode1)
+        // {
+        //     //grab the script off of the display then look for the displayable objects then colour it green if right
+        //     connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[0].GetComponent<SpriteRenderer>().color = Color.green;
 
-        else if (Input2 == PuzzleCode1 || Input2 == PuzzleCode3 || Input2 == PuzzleCode4)
-        {
-            print("almost");
-            connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[1].GetComponent<SpriteRenderer>().color = Color.yellow;
-        }
-        else
-        {
-            print("No Way");
-            connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[1].GetComponent<SpriteRenderer>().color = Color.red;
-        }
+        //     //this bellow was using a refrence of the script but it came back null for the displayable objects
+        //     //connectingDisplay.displayableObjects[0].GetComponent<SpriteRenderer>().color = Color.green;
+
+        //     print("Good");
+        // }
+
+        // // if the first input is the same as any number
+        // else if (Input1 == PuzzleCode2 || Input1 == PuzzleCode3 || Input1 == PuzzleCode4)
+        // {
+        //     print("almost");
+        //     connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[0].GetComponent<SpriteRenderer>().color = Color.yellow;
+        // }
+        // else
+        // { print("No Way");
+        //     connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[0].GetComponent<SpriteRenderer>().color = Color.red;
+        // }
 
 
-        if (Input3 == PuzzleCode3)
-        { print("Good");
-            connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[2].GetComponent<SpriteRenderer>().color = Color.green;
-        }
-        else if (Input3 == PuzzleCode1 || Input3 == PuzzleCode2 || Input3 == PuzzleCode4)
-        { print("almost"); connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[2].GetComponent<SpriteRenderer>().color = Color.yellow; 
-        }
-        else
-        { print("No Way"); 
-            connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[2].GetComponent<SpriteRenderer>().color = Color.red; 
-        }
+        // if (Input2 == PuzzleCode2)
+        // { print("Good"); 
+        //     connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[1].GetComponent<SpriteRenderer>().color = Color.green; 
+        // }
 
-        if (Input4 == PuzzleCode4)
-        { print("Good"); 
-            connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[3].GetComponent<SpriteRenderer>().color = Color.green; 
-        }
-        else if (Input4 == PuzzleCode1 || Input4 == PuzzleCode3 || Input4 == PuzzleCode2)
-        { connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[3].GetComponent<SpriteRenderer>().color = Color.yellow;
-        print("almost"); }
-        else
-        { print("No Way"); connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[3].GetComponent<SpriteRenderer>().color = Color.red; 
-        }
+        // else if (Input2 == PuzzleCode1 || Input2 == PuzzleCode3 || Input2 == PuzzleCode4)
+        // {
+        //     print("almost");
+        //     connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[1].GetComponent<SpriteRenderer>().color = Color.yellow;
+        // }
+        // else
+        // {
+        //     print("No Way");
+        //     connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[1].GetComponent<SpriteRenderer>().color = Color.red;
+        // }
+
+
+        // if (Input3 == PuzzleCode3)
+        // { print("Good");
+        //     connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[2].GetComponent<SpriteRenderer>().color = Color.green;
+        // }
+        // else if (Input3 == PuzzleCode1 || Input3 == PuzzleCode2 || Input3 == PuzzleCode4)
+        // { print("almost"); connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[2].GetComponent<SpriteRenderer>().color = Color.yellow; 
+        // }
+        // else
+        // { print("No Way"); 
+        //     connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[2].GetComponent<SpriteRenderer>().color = Color.red; 
+        // }
+
+        // if (Input4 == PuzzleCode4)
+        // { print("Good"); 
+        //     connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[3].GetComponent<SpriteRenderer>().color = Color.green; 
+        // }
+        // else if (Input4 == PuzzleCode1 || Input4 == PuzzleCode3 || Input4 == PuzzleCode2)
+        // { connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[3].GetComponent<SpriteRenderer>().color = Color.yellow;
+        // print("almost"); }
+        // else
+        // { print("No Way"); connectingDisplay.GetComponent<DisplayPuzzle1>().displayableObjects[3].GetComponent<SpriteRenderer>().color = Color.red; 
+        // }
 
     }
     // Update is called once per frame

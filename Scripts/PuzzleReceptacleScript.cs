@@ -5,15 +5,15 @@ using UnityEngine;
 public class PuzzleReceptacleScript : MonoBehaviour
 {
     public GameObject setOfPieces;
-    GameObject reciever;
-    GameObject piece;
-    public List<GameObject> recievingObjs;
-    public List<GameObject> Receptacles;
+    GameObject reciever, piece;
+    public List<GameObject> recievingObjs, Receptacles;
     
     public List<Vector3> SpawnLocations;
     // Start is called before the first frame update
     void Start()
     {
+        int randomIndex;
+        
         //get all of the puzzle pieces
         foreach (Transform child in setOfPieces.transform)
         {
@@ -33,7 +33,7 @@ public class PuzzleReceptacleScript : MonoBehaviour
         {
             //sort and randomise the spawn location positions
             Vector3 temp = SpawnLocations[i];
-            int randomIndex = Random.Range(i, SpawnLocations.Count);
+            randomIndex = Random.Range(i, SpawnLocations.Count);
             SpawnLocations[i] = SpawnLocations[randomIndex];
             SpawnLocations[randomIndex] = temp;
         }
@@ -53,58 +53,49 @@ public class PuzzleReceptacleScript : MonoBehaviour
             Receptacles[i].transform.name = "R" + i;
         }
     }
-         public void TryPlace(GameObject[] RthenP)
-        {
+    public void TryPlace(GameObject[] RthenP)
+    {
         //assign them to the first and second out of the array
-            reciever = RthenP[0];
-            piece = RthenP[1];
-            int PieceInt = -1;
-            int RecieveInt = -2;
-            int.TryParse(reciever.name.Substring(1), out PieceInt);
-            int.TryParse(piece.name.Substring(1), out RecieveInt);
+        int PieceInt = -1;
+        int RecieveInt = -2;
 
-
-            if (PieceInt == RecieveInt)
-            {
-                print("correct");
+        reciever = RthenP[0];
+        piece = RthenP[1];
+        
+        int.TryParse(reciever.name.Substring(1), out PieceInt);
+        int.TryParse(piece.name.Substring(1), out RecieveInt);
+        
+        if (PieceInt == RecieveInt)
+        {
+            print("correct");
             piece.SendMessage("PutInPlace", reciever.transform);
-                //PutInPlace(reciever.transform);
-
-                //check if that was the last piece
-                for (int i = 0; i < reciever.GetComponentInParent<PuzzleReceptacleScript>().recievingObjs.Count;)
+            //PutInPlace(reciever.transform);
+            //check if that was the last piece
+            for (int i = 0; i < reciever.GetComponentInParent<PuzzleReceptacleScript>().recievingObjs.Count;)
+            {
+                if (reciever.GetComponentInParent<PuzzleReceptacleScript>().recievingObjs[i].GetComponent<PuzzlePiece>().inSlot == true)
                 {
-                    if (reciever.GetComponentInParent<PuzzleReceptacleScript>().recievingObjs[i].GetComponent<PuzzlePiece>().inSlot == true)
+                    i++; // this is string, initing i to 1 and putting it in the loop will be better, and adding this to a and statement 
+                        // to the above if will work then
+                    if (i == reciever.GetComponentInParent<PuzzleReceptacleScript>().recievingObjs.Count)
                     {
-                        i++;
-                        if (i == reciever.GetComponentInParent<PuzzleReceptacleScript>().recievingObjs.Count)
-                        {
-                            print("you did it");
-                        }
-                    }
-                    else
-                    {
-                        break;
+                        print("you did it");
                     }
                 }
-            }
-            else
-            {
-                print("incorrect");
+                else
+                {
+                    break; //break statements arent the best, this loop can be bettered
+                }
             }
         }
+        else
+        {
+            print("incorrect");
+        }
+    }
 
         //randomize piece location
         //for()
-
-
-
-    
-
- 
-
-
- 
-    
 
     // Update is called once per frame
     void Update()

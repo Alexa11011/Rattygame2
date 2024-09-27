@@ -5,22 +5,13 @@ using UnityEngine;
 public class Puzzle_Button : Interactable
 {
     private string ButtonName;
-    public GameObject theDoor;
-    public GameObject theMonitor;
+    public GameObject theDoor, theMonitor;
     NetworkScript networkScript;
-
-
-    //animatingstuff
-     bool isAnimating;
-    //starting postion
-    Vector3 startingPostion;
-    //ending position
-    Vector3 endingPosition;
-    //how far to push in and out
-     float pushDepth = 0.1f;
-    float pushSpeed = 0.4f;
-    //check which way button is going
-    bool buttonIn;
+    bool isAnimating; //animatingstuff
+    Vector3 startingPostion, endingPosition; //starting postion, ending position
+    float pushDepth = 0.1f, pushSpeed = 0.4f; //how far to push in and out
+    
+    bool buttonIn; //check which way button is going
     
     //call out to the door that 
     
@@ -42,27 +33,25 @@ public class Puzzle_Button : Interactable
 
     public override void Interact()
     {
+        Dictionary<string, string> buttonPush;
+
         //move button
-        isAnimating = true;
-        buttonIn = true;
+        isAnimating = buttonIn = true;
+
         //play sound here
-
-
 
         //this is the message that needs to be sent
         //MULTI~Name|Door_Puzzle_1~Method|HandleMessage~Value|B1
-
-        Dictionary<string, string> buttonPush = new Dictionary<string, string>();
+        
+        buttonPush = new Dictionary<string, string>();
 
         //linking the key of name to the value of door name in the dictionary called buttonpush
+
         buttonPush["Name"] = theDoor.name;
         buttonPush["Method"] = "HandleMessage";
         buttonPush["Value"] = ButtonName;
 
-
-
-
-        
+        //send network button push
         NetworkHandler.SendTcpMessage("127.0.0.1", 5556, new NetworkHandler.ThreadParams(), new NetworkHandler.MessageContents(buttonPush));
 
         //tell the door what button you are
@@ -72,19 +61,15 @@ public class Puzzle_Button : Interactable
         theMonitor.SendMessage("HandleMessage", ButtonName);
     }
 
-   
-
     // Update is called once per frame
     void Update()
     {
-
         if (isAnimating)
         {
             if (buttonIn == true)
             {
 
                 transform.localPosition = Vector3.MoveTowards(transform.localPosition, endingPosition, Time.deltaTime * pushSpeed);
-
 
                 if (transform.localPosition == endingPosition)
                 {
