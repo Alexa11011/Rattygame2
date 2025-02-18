@@ -5,9 +5,9 @@ using UnityEngine;
 public class Controls : MonoBehaviour
 {
     //speeds
-    public float JumpHeight;
-    public float JumpDelay;
-    public float JumpTimer;
+    public float JumpHeight, JumpDelay, JumpTimer ;
+ //  public float JumpDelay;
+   // public float JumpTimer;
     [Range(1, 10)] public float WalkSpeed;
      public float SprintMultiplier;
     public float RotateHorizontal;

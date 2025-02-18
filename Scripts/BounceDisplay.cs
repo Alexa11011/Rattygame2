@@ -69,7 +69,7 @@ public class BounceDisplay : MonoBehaviour
         //does not work if scaled
         if (this.transform.localPosition.x >= monitorSprite.size.x / 2 - width / 2 || this.transform.localPosition.x <= -monitorSprite.size.x / 2 + width / 2)
         {
-            displaySpeedX *= -1;
+        //    displaySpeedX *= -1;
         }
     
         if (this.transform.localPosition.y >= monitorSprite.size.y / 2 - height / 2 || this.transform.localPosition.y <= -monitorSprite.size.y / 2 + height / 2)
