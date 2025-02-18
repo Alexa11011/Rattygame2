@@ -4,41 +4,47 @@ using UnityEngine;
 
 public class BounceDisplay : MonoBehaviour
 {
-    float displaySpeedX = 0.0002f;
-    float displaySpeedY = -0.0002f;
-   
-    //parent size
-    public float pWidth;
-    public float pHeight;
-    //hold kids size
-    float width;
-    float height;
-
-    public SpriteRenderer monitorSprite;
-
-    
-
-    // Start is called before the first frame update
+    public float displaySpeedX = 0.0002f;
+    public float displaySpeedY = -0.0002f;
+   public Transform monitorPosition;
+   public SpriteRenderer monitorSizer;
+    float rightBound;float leftBound;float upperBound;float lowerBound;
+    float waitTime = 0f;
     void Start()
-    {     
-        //have to use transform.parent instead of getcomponent in parent because it searches this object first for a transform
-
-        // get width and hieght from local scale
-        width = this.GetComponent<Transform>().lossyScale.x;
-        height = this.GetComponent<Transform>().lossyScale.y;
-        pWidth = transform.parent.lossyScale.x;
-        pHeight = transform.parent.lossyScale.y;
-
-        monitorSprite = transform.parent.GetComponent<SpriteRenderer>();
+    { 
+        //bounds of sprite boxes are their transforms position plus half their bounding size
+        //this one does however assume the sprite has been rotated
+        rightBound = monitorPosition.position.z + monitorSizer.bounds.size.z / 2;
+        leftBound = monitorPosition.position.z - monitorSizer.bounds.size.z / 2;
+        upperBound = monitorPosition.position.y + monitorSizer.bounds.size.y / 2;
+        lowerBound = monitorPosition.position.y - monitorSizer.bounds.size.y / 2;
 
         RANDOMISEDIRECTION();
-
-            
     }
-
-    void RANDOMISEDIRECTION()
+    // Update is called once per frame
+    void Update()
     {
-
+        //find this objects side then check if its past the other objects side and wait a lil to not infi bounche
+        //checks both left and right side at same time. same for bottom and top
+        waitTime = waitTime - Time.deltaTime;
+        if (waitTime<= 0)
+        {     
+            if (this.transform.position.z + this.GetComponent<SpriteRenderer>().bounds.size.z / 2 > rightBound || this.transform.position.z - this.GetComponent<SpriteRenderer>().bounds.size.z / 2 < leftBound)
+            {
+                displaySpeedX *= -1;
+            }
+            else if (this.transform.position.y + this.GetComponent<SpriteRenderer>().bounds.size.y / 2 > upperBound || this.transform.position.y - this.GetComponent<SpriteRenderer>().bounds.size.y / 2 < lowerBound)
+            {
+                displaySpeedY *= -1;    
+            }       
+            waitTime = 0.2f; 
+        }
+        //update position
+        this.transform.localPosition = new Vector3(this.transform.localPosition.x + displaySpeedX, this.transform.localPosition.y + displaySpeedY, this.transform.localPosition.z);
+    }
+     void RANDOMISEDIRECTION()
+    {
+        //start moving in a random direction
         int randomX = Random.Range(0, 2);
         int randomY = Random.Range(0, 2);
         if (randomX == 1)
@@ -50,33 +56,5 @@ public class BounceDisplay : MonoBehaviour
         {
             displaySpeedY *= -1;
         }
-    }
-
-    
-    // Update is called once per frame
-    void Update()
-    {
-        //size = GetComponentInParent<MeshCollider>().bounds.size; this is the code for 3d object to find edges
-        //get the sprite renderer size to base off
-
-
-
-        //update position
-        this.transform.localPosition = new Vector3(this.transform.localPosition.x + displaySpeedX, this.transform.localPosition.y + displaySpeedY, this.transform.localPosition.z);
-
-        //get the parents sprite size / 2 if your past that position positively your to far right and take away half your width to the right
-        //hit the right or bottom
-        //does not work if scaled
-        if (this.transform.localPosition.x >= monitorSprite.size.x / 2 - width / 2 || this.transform.localPosition.x <= -monitorSprite.size.x / 2 + width / 2)
-        {
-        //    displaySpeedX *= -1;
-        }
-    
-        if (this.transform.localPosition.y >= monitorSprite.size.y / 2 - height / 2 || this.transform.localPosition.y <= -monitorSprite.size.y / 2 + height / 2)
-        {
-            displaySpeedY *= -1;
-        }
-
-        
     }
 }
